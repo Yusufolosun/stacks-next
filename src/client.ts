@@ -13,7 +13,7 @@
  * import {
  *   createStacksConfig,
  *   isValidStacksAddress,
- *   // React hooks and components will be added in later phases
+ *   // Additional React hooks and components may arrive in future minor releases
  * } from '@yusufolosun/stacks-next/client';
  * ```
  *
