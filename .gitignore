@@ -1,0 +1,100 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment & Secrets - SECURITY CRITICAL
+.env
+.env.*
+.env.local
+.env.development
+.env.test
+.env.production
+.envrc
+.direnv/
+*.env
+*.env.*
+
+# Stacks/Clarity sensitive files - SECURITY CRITICAL
+Mainnet.toml
+Testnet.toml
+Devnet.toml
+wallet.json
+keystore*.json
+*.keystore
+*.seed
+*.mnemonic
+mnemonic.txt
+seed.txt
+secret*.txt
+**/secrets/
+**/private/
+**/wallets/
+*.pem
+*.key
+*.pk8
+*.pkcs8
+*.p12
+*.pfx
+*.jks
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# NPM auth - SECURITY CRITICAL
+.npmrc
+.yarnrc.yml
+
+# Deployment scripts that may contain credentials
+deploy.sh
+deploy-*.sh
+*.deploy.js
+*.deploy.ts
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+*.tmp
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+
+# Misc
+*.local
+.vercel
+.netlify
