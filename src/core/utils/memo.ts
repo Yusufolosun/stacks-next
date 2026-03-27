@@ -2,8 +2,8 @@
  * Memo utilities for STX transactions.
  */
 
-import { MEMO_MAX_LENGTH } from '../constants';
-import { InvalidMemoError } from '../errors';
+import { MEMO_MAX_LENGTH } from "../constants";
+import { InvalidMemoError } from "../errors";
 
 const textEncoder = new TextEncoder();
 
@@ -11,7 +11,7 @@ const textEncoder = new TextEncoder();
  * Returns the UTF-8 byte length of a memo.
  */
 export function getMemoByteLength(memo: string): number {
-  if (typeof memo !== 'string') {
+  if (typeof memo !== "string") {
     return 0;
   }
 
@@ -21,11 +21,8 @@ export function getMemoByteLength(memo: string): number {
 /**
  * Validates a transaction memo against max byte length.
  */
-export function isValidMemo(
-  memo: string,
-  maxBytes = MEMO_MAX_LENGTH
-): boolean {
-  if (typeof memo !== 'string') {
+export function isValidMemo(memo: string, maxBytes = MEMO_MAX_LENGTH): boolean {
+  if (typeof memo !== "string") {
     return false;
   }
 
@@ -41,12 +38,12 @@ export function isValidMemo(
  */
 export function assertValidMemo(
   memo: string,
-  maxBytes = MEMO_MAX_LENGTH
+  maxBytes = MEMO_MAX_LENGTH,
 ): asserts memo is string {
   if (!isValidMemo(memo, maxBytes)) {
     throw new InvalidMemoError(
       memo,
-      `Memo must be a UTF-8 string with at most ${maxBytes} bytes`
+      `Memo must be a UTF-8 string with at most ${maxBytes} bytes`,
     );
   }
 }
@@ -54,23 +51,20 @@ export function assertValidMemo(
 /**
  * Truncates a memo to a max UTF-8 byte length without splitting code points.
  */
-export function truncateMemo(
-  memo: string,
-  maxBytes = MEMO_MAX_LENGTH
-): string {
-  if (typeof memo !== 'string') {
-    throw new InvalidMemoError(String(memo), 'Memo must be a string');
+export function truncateMemo(memo: string, maxBytes = MEMO_MAX_LENGTH): string {
+  if (typeof memo !== "string") {
+    throw new InvalidMemoError(String(memo), "Memo must be a string");
   }
 
   if (!Number.isInteger(maxBytes) || maxBytes <= 0) {
-    throw new InvalidMemoError(memo, 'maxBytes must be a positive integer');
+    throw new InvalidMemoError(memo, "maxBytes must be a positive integer");
   }
 
   if (getMemoByteLength(memo) <= maxBytes) {
     return memo;
   }
 
-  let output = '';
+  let output = "";
 
   for (const character of memo) {
     const candidate = `${output}${character}`;

@@ -14,7 +14,7 @@
  *
  * import {
  *   createStacksConfig,
- *   // Server-side utilities will be added in later phases
+ *   // Additional server-side utilities are available from this module
  * } from '@yusufolosun/stacks-next/server';
  *
  * export async function transferStx(recipient: string, amount: bigint) {
@@ -27,32 +27,32 @@
  */
 
 // Re-export all universal utilities
-export * from './index';
+export * from "./index";
 
 // Server-side transaction utilities
 export {
-	buildUnsignedStxTransfer,
-	buildUnsignedContractCall,
-	broadcastSignedTransaction,
-	broadcastSignedTransactionOrThrow,
-	createServerAction,
-} from './server/transactions';
+  buildUnsignedStxTransfer,
+  buildUnsignedContractCall,
+  broadcastSignedTransaction,
+  broadcastSignedTransactionOrThrow,
+  createServerAction,
+} from "./server/transactions";
 export type {
-	BuildUnsignedStxTransferOptions,
-	BuildUnsignedContractCallOptions,
-	CreateServerActionOptions,
-	ServerActionFailure,
-	ServerActionSuccess,
-	ServerActionResult,
-} from './server/transactions';
+  BuildUnsignedStxTransferOptions,
+  BuildUnsignedContractCallOptions,
+  CreateServerActionOptions,
+  ServerActionFailure,
+  ServerActionSuccess,
+  ServerActionResult,
+} from "./server/transactions";
 
 // ABI-aware contract read client
 export {
-	fetchContractAbi,
-	createContractReadClient,
-} from './server/contractClient';
+  fetchContractAbi,
+  createContractReadClient,
+} from "./server/contractClient";
 export type {
-	ReadOnlyCallResult,
-	ContractReadClient,
-	CreateContractReadClientOptions,
-} from './server/contractClient';
+  ReadOnlyCallResult,
+  ContractReadClient,
+  CreateContractReadClientOptions,
+} from "./server/contractClient";

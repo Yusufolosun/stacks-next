@@ -23,7 +23,7 @@
 // Re-export all universal utilities
 export * from './index';
 
-// Client-specific exports will be added here in Phase 4 (React Integration)
+// Client-specific exports will be added in future minor releases.
 // Examples:
 // - StacksProvider (React context provider)
 // - useConnect (wallet connection hook)

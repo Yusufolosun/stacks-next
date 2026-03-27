@@ -4,7 +4,7 @@
  * These errors provide better context and type safety for error handling.
  */
 
-import { ERROR_CODES } from './constants';
+import { ERROR_CODES } from "./constants";
 
 /**
  * Base error class for all stacks-next errors
@@ -15,7 +15,7 @@ export class StacksNextError extends Error {
 
   constructor(message: string, code: string, details?: unknown) {
     super(message);
-    this.name = 'StacksNextError';
+    this.name = "StacksNextError";
     this.code = code;
     this.details = details;
     Object.setPrototypeOf(this, StacksNextError.prototype);
@@ -30,9 +30,9 @@ export class InvalidAddressError extends StacksNextError {
     super(
       `Invalid Stacks address: ${address}`,
       ERROR_CODES.INVALID_ADDRESS,
-      details
+      details,
     );
-    this.name = 'InvalidAddressError';
+    this.name = "InvalidAddressError";
     Object.setPrototypeOf(this, InvalidAddressError.prototype);
   }
 }
@@ -45,9 +45,9 @@ export class InvalidNetworkError extends StacksNextError {
     super(
       `Invalid network: ${network}. Must be 'mainnet', 'testnet', or 'devnet'`,
       ERROR_CODES.INVALID_NETWORK,
-      details
+      details,
     );
-    this.name = 'InvalidNetworkError';
+    this.name = "InvalidNetworkError";
     Object.setPrototypeOf(this, InvalidNetworkError.prototype);
   }
 }
@@ -60,9 +60,9 @@ export class InvalidAmountError extends StacksNextError {
     super(
       `Invalid amount: ${amount}. Amount must be a positive non-zero value`,
       ERROR_CODES.INVALID_AMOUNT,
-      details
+      details,
     );
-    this.name = 'InvalidAmountError';
+    this.name = "InvalidAmountError";
     Object.setPrototypeOf(this, InvalidAmountError.prototype);
   }
 }
@@ -75,9 +75,9 @@ export class InvalidFeeError extends StacksNextError {
     super(
       `Invalid fee: ${fee}. Fee must be within acceptable range`,
       ERROR_CODES.INVALID_FEE,
-      details
+      details,
     );
-    this.name = 'InvalidFeeError';
+    this.name = "InvalidFeeError";
     Object.setPrototypeOf(this, InvalidFeeError.prototype);
   }
 }
@@ -90,9 +90,9 @@ export class InvalidNonceError extends StacksNextError {
     super(
       `Invalid nonce: ${nonce}. Nonce must be a non-negative integer`,
       ERROR_CODES.INVALID_NONCE,
-      details
+      details,
     );
-    this.name = 'InvalidNonceError';
+    this.name = "InvalidNonceError";
     Object.setPrototypeOf(this, InvalidNonceError.prototype);
   }
 }
@@ -105,9 +105,9 @@ export class InvalidContractError extends StacksNextError {
     super(
       `Invalid contract: ${contractId}`,
       ERROR_CODES.INVALID_CONTRACT,
-      details
+      details,
     );
-    this.name = 'InvalidContractError';
+    this.name = "InvalidContractError";
     Object.setPrototypeOf(this, InvalidContractError.prototype);
   }
 }
@@ -120,9 +120,9 @@ export class InvalidFunctionError extends StacksNextError {
     super(
       `Invalid function: ${functionName}`,
       ERROR_CODES.INVALID_FUNCTION,
-      details
+      details,
     );
-    this.name = 'InvalidFunctionError';
+    this.name = "InvalidFunctionError";
     Object.setPrototypeOf(this, InvalidFunctionError.prototype);
   }
 }
@@ -133,7 +133,7 @@ export class InvalidFunctionError extends StacksNextError {
 export class InvalidBnsNameError extends StacksNextError {
   constructor(name: string, details?: unknown) {
     super(`Invalid BNS name: ${name}`, ERROR_CODES.INVALID_BNS_NAME, details);
-    this.name = 'InvalidBnsNameError';
+    this.name = "InvalidBnsNameError";
     Object.setPrototypeOf(this, InvalidBnsNameError.prototype);
   }
 }
@@ -146,9 +146,9 @@ export class InvalidBnsNamespaceError extends StacksNextError {
     super(
       `Invalid BNS namespace: ${namespace}`,
       ERROR_CODES.INVALID_BNS_NAMESPACE,
-      details
+      details,
     );
-    this.name = 'InvalidBnsNamespaceError';
+    this.name = "InvalidBnsNamespaceError";
     Object.setPrototypeOf(this, InvalidBnsNamespaceError.prototype);
   }
 }
@@ -159,7 +159,7 @@ export class InvalidBnsNamespaceError extends StacksNextError {
 export class InvalidMemoError extends StacksNextError {
   constructor(memo: string, details?: unknown) {
     super(`Invalid memo: ${memo}`, ERROR_CODES.INVALID_MEMO, details);
-    this.name = 'InvalidMemoError';
+    this.name = "InvalidMemoError";
     Object.setPrototypeOf(this, InvalidMemoError.prototype);
   }
 }
@@ -172,7 +172,7 @@ export class TransactionFailedError extends StacksNextError {
 
   constructor(message: string, txId?: string, details?: unknown) {
     super(message, ERROR_CODES.TRANSACTION_FAILED, details);
-    this.name = 'TransactionFailedError';
+    this.name = "TransactionFailedError";
     this.txId = txId;
     Object.setPrototypeOf(this, TransactionFailedError.prototype);
   }
@@ -184,7 +184,7 @@ export class TransactionFailedError extends StacksNextError {
 export class BroadcastFailedError extends StacksNextError {
   constructor(message: string, details?: unknown) {
     super(message, ERROR_CODES.BROADCAST_FAILED, details);
-    this.name = 'BroadcastFailedError';
+    this.name = "BroadcastFailedError";
     Object.setPrototypeOf(this, BroadcastFailedError.prototype);
   }
 }
@@ -195,7 +195,7 @@ export class BroadcastFailedError extends StacksNextError {
 export class SignatureVerificationError extends StacksNextError {
   constructor(message: string, details?: unknown) {
     super(message, ERROR_CODES.SIGNATURE_VERIFICATION_FAILED, details);
-    this.name = 'SignatureVerificationError';
+    this.name = "SignatureVerificationError";
     Object.setPrototypeOf(this, SignatureVerificationError.prototype);
   }
 }
@@ -204,9 +204,9 @@ export class SignatureVerificationError extends StacksNextError {
  * Unauthorized error
  */
 export class UnauthorizedError extends StacksNextError {
-  constructor(message = 'Unauthorized access', details?: unknown) {
+  constructor(message = "Unauthorized access", details?: unknown) {
     super(message, ERROR_CODES.UNAUTHORIZED, details);
-    this.name = 'UnauthorizedError';
+    this.name = "UnauthorizedError";
     Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
 }
@@ -219,7 +219,7 @@ export class NotFoundError extends StacksNextError {
 
   constructor(resource: string, details?: unknown) {
     super(`Resource not found: ${resource}`, ERROR_CODES.NOT_FOUND, details);
-    this.name = 'NotFoundError';
+    this.name = "NotFoundError";
     this.resource = resource;
     Object.setPrototypeOf(this, NotFoundError.prototype);
   }
@@ -236,10 +236,10 @@ export class ApiError extends StacksNextError {
     message: string,
     statusCode?: number,
     url?: string,
-    details?: unknown
+    details?: unknown,
   ) {
     super(message, ERROR_CODES.API_ERROR, details);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.statusCode = statusCode;
     this.url = url;
     Object.setPrototypeOf(this, ApiError.prototype);
@@ -252,7 +252,7 @@ export class ApiError extends StacksNextError {
 export class NetworkError extends StacksNextError {
   constructor(message: string, details?: unknown) {
     super(message, ERROR_CODES.NETWORK_ERROR, details);
-    this.name = 'NetworkError';
+    this.name = "NetworkError";
     Object.setPrototypeOf(this, NetworkError.prototype);
   }
 }

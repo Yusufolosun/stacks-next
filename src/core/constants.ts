@@ -2,14 +2,14 @@
  * Constants and default values for @yusufolosun/stacks-next
  */
 
-import type { NetworkType } from './types';
+import type { NetworkType } from "./types";
 
 /**
  * Default Hiro API URLs for each network
  */
-export const MAINNET_URL = 'https://api.mainnet.hiro.so';
-export const TESTNET_URL = 'https://api.testnet.hiro.so';
-export const DEVNET_URL = 'http://localhost:3999';
+export const MAINNET_URL = "https://api.mainnet.hiro.so";
+export const TESTNET_URL = "https://api.testnet.hiro.so";
+export const DEVNET_URL = "http://localhost:3999";
 
 /**
  * Network URL mapping
@@ -34,12 +34,12 @@ export const MICRO_STX_PER_STX = BigInt(1_000_000);
 /**
  * Default anchor mode for transactions
  */
-export const DEFAULT_ANCHOR_MODE = 'any' as const;
+export const DEFAULT_ANCHOR_MODE = "any" as const;
 
 /**
  * Default post-condition mode
  */
-export const DEFAULT_POST_CONDITION_MODE = 'deny' as const;
+export const DEFAULT_POST_CONDITION_MODE = "deny" as const;
 
 /**
  * Clarity version
@@ -126,8 +126,8 @@ export const ADDRESS_VERSION_TESTNET_MULTI_SIG = 21;
  * STX token info
  */
 export const STX_TOKEN = {
-  name: 'Stacks',
-  symbol: 'STX',
+  name: "Stacks",
+  symbol: "STX",
   decimals: 6,
 };
 
@@ -135,23 +135,23 @@ export const STX_TOKEN = {
  * Error codes
  */
 export const ERROR_CODES = {
-  INVALID_ADDRESS: 'INVALID_ADDRESS',
-  INVALID_NETWORK: 'INVALID_NETWORK',
-  INVALID_AMOUNT: 'INVALID_AMOUNT',
-  INVALID_FEE: 'INVALID_FEE',
-  INVALID_NONCE: 'INVALID_NONCE',
-  INVALID_CONTRACT: 'INVALID_CONTRACT',
-  INVALID_FUNCTION: 'INVALID_FUNCTION',
-  INVALID_BNS_NAME: 'INVALID_BNS_NAME',
-  INVALID_BNS_NAMESPACE: 'INVALID_BNS_NAMESPACE',
-  INVALID_MEMO: 'INVALID_MEMO',
-  TRANSACTION_FAILED: 'TRANSACTION_FAILED',
-  BROADCAST_FAILED: 'BROADCAST_FAILED',
-  SIGNATURE_VERIFICATION_FAILED: 'SIGNATURE_VERIFICATION_FAILED',
-  UNAUTHORIZED: 'UNAUTHORIZED',
-  NOT_FOUND: 'NOT_FOUND',
-  API_ERROR: 'API_ERROR',
-  NETWORK_ERROR: 'NETWORK_ERROR',
+  INVALID_ADDRESS: "INVALID_ADDRESS",
+  INVALID_NETWORK: "INVALID_NETWORK",
+  INVALID_AMOUNT: "INVALID_AMOUNT",
+  INVALID_FEE: "INVALID_FEE",
+  INVALID_NONCE: "INVALID_NONCE",
+  INVALID_CONTRACT: "INVALID_CONTRACT",
+  INVALID_FUNCTION: "INVALID_FUNCTION",
+  INVALID_BNS_NAME: "INVALID_BNS_NAME",
+  INVALID_BNS_NAMESPACE: "INVALID_BNS_NAMESPACE",
+  INVALID_MEMO: "INVALID_MEMO",
+  TRANSACTION_FAILED: "TRANSACTION_FAILED",
+  BROADCAST_FAILED: "BROADCAST_FAILED",
+  SIGNATURE_VERIFICATION_FAILED: "SIGNATURE_VERIFICATION_FAILED",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  NOT_FOUND: "NOT_FOUND",
+  API_ERROR: "API_ERROR",
+  NETWORK_ERROR: "NETWORK_ERROR",
 } as const;
 
 /**
@@ -159,7 +159,8 @@ export const ERROR_CODES = {
  */
 export const PATTERNS = {
   STACKS_ADDRESS: /^S[TPMNC][1-9A-HJ-NP-Z]{38,40}$/,
-  CONTRACT_ID: /^S[TPMNC][1-9A-HJ-NP-Z]{38,40}\.[a-zA-Z]([a-zA-Z0-9]|[-_]){0,39}$/,
+  CONTRACT_ID:
+    /^S[TPMNC][1-9A-HJ-NP-Z]{38,40}\.[a-zA-Z]([a-zA-Z0-9]|[-_]){0,39}$/,
   TX_ID: /^0x[0-9a-fA-F]{64}$/,
   BNS_NAME: /^[a-z0-9]([a-z0-9-]{0,36}[a-z0-9])?$/,
   BNS_NAMESPACE: /^[a-z0-9-]{1,20}$/,

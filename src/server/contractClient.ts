@@ -10,19 +10,26 @@ import {
   type ClarityAbi,
   type ClarityAbiFunction,
   type ClarityValue,
-} from '@stacks/transactions';
-import { InvalidAddressError, InvalidContractError, InvalidFunctionError, ApiError } from '../core/errors';
-import type { StacksAddress, StacksConfig } from '../core/types';
-import { assertValidAddress, isValidContractId } from '../core/utils/address';
+} from "@stacks/transactions";
+import {
+  InvalidAddressError,
+  InvalidContractError,
+  InvalidFunctionError,
+  ApiError,
+} from "../core/errors";
+import type { StacksAddress, StacksConfig } from "../core/types";
+import { assertValidAddress, isValidContractId } from "../core/utils/address";
 
 type AbiFunctionName<TAbi extends ClarityAbi> =
-  TAbi['functions'][number]['name'] & string;
+  TAbi["functions"][number]["name"] & string;
 
 type ReadOnlyFunctionArgs = ReadonlyArray<ClarityValue> & {
   readonly length: number;
 };
 
-export interface ReadOnlyCallResult<TValue extends ClarityValue = ClarityValue> {
+export interface ReadOnlyCallResult<
+  TValue extends ClarityValue = ClarityValue,
+> {
   value: TValue;
   hex: string;
   repr: string;
@@ -36,17 +43,19 @@ export interface ContractReadClient<TAbi extends ClarityAbi> {
   call<TName extends AbiFunctionName<TAbi>>(
     functionName: TName,
     args: ReadOnlyFunctionArgs,
-    senderAddress?: StacksAddress
+    senderAddress?: StacksAddress,
   ): Promise<ReadOnlyCallResult>;
   methods: {
     [TName in AbiFunctionName<TAbi>]?: (
       args: ReadOnlyFunctionArgs,
-      senderAddress?: StacksAddress
+      senderAddress?: StacksAddress,
     ) => Promise<ReadOnlyCallResult>;
   };
 }
 
-export interface CreateContractReadClientOptions<TAbi extends ClarityAbi = ClarityAbi> {
+export interface CreateContractReadClientOptions<
+  TAbi extends ClarityAbi = ClarityAbi,
+> {
   config: StacksConfig;
   contractAddress: StacksAddress;
   contractName: string;
@@ -55,16 +64,16 @@ export interface CreateContractReadClientOptions<TAbi extends ClarityAbi = Clari
   abiLoader?: (
     config: StacksConfig,
     contractAddress: StacksAddress,
-    contractName: string
+    contractName: string,
   ) => Promise<TAbi>;
   readOnlyCaller?: typeof callReadOnlyFunction;
 }
 
 function isClarityAbi(value: unknown): value is ClarityAbi {
   return (
-    typeof value === 'object' &&
+    typeof value === "object" &&
     value !== null &&
-    'functions' in value &&
+    "functions" in value &&
     Array.isArray((value as { functions?: unknown }).functions)
   );
 }
@@ -76,7 +85,7 @@ export async function fetchContractAbi(
   config: StacksConfig,
   contractAddress: StacksAddress,
   contractName: string,
-  fetcher: typeof fetch = fetch
+  fetcher: typeof fetch = fetch,
 ): Promise<ClarityAbi> {
   assertValidAddress(contractAddress);
 
@@ -91,18 +100,18 @@ export async function fetchContractAbi(
     throw new ApiError(
       `Failed to fetch contract ABI: ${response.statusText}`,
       response.status,
-      url
+      url,
     );
   }
 
   const payload: unknown = await response.json();
 
   const candidateAbi =
-    typeof payload === 'object' && payload !== null && 'abi' in payload
+    typeof payload === "object" && payload !== null && "abi" in payload
       ? (payload as { abi: unknown }).abi
       : payload;
 
-  if (typeof candidateAbi === 'string') {
+  if (typeof candidateAbi === "string") {
     try {
       const parsed = JSON.parse(candidateAbi) as unknown;
       if (!isClarityAbi(parsed)) {
@@ -124,18 +133,21 @@ export async function fetchContractAbi(
 function assertReadOnlyFunction(
   abi: ClarityAbi,
   functionName: string,
-  expectedArgLength: number
+  expectedArgLength: number,
 ): ClarityAbiFunction {
-  const fn = abi.functions.find(item => item.name === functionName);
+  const fn = abi.functions.find((item) => item.name === functionName);
 
-  if (!fn || fn.access !== 'read_only') {
-    throw new InvalidFunctionError(functionName, 'Function must exist and be read_only');
+  if (!fn || fn.access !== "read_only") {
+    throw new InvalidFunctionError(
+      functionName,
+      "Function must exist and be read_only",
+    );
   }
 
   if (fn.args.length !== expectedArgLength) {
     throw new InvalidFunctionError(
       functionName,
-      `Expected ${fn.args.length} args but received ${expectedArgLength}`
+      `Expected ${fn.args.length} args but received ${expectedArgLength}`,
     );
   }
 
@@ -146,7 +158,7 @@ function assertReadOnlyFunction(
  * Creates an ABI-aware typed read-only contract client.
  */
 export async function createContractReadClient<TAbi extends ClarityAbi>(
-  options: CreateContractReadClientOptions<TAbi>
+  options: CreateContractReadClientOptions<TAbi>,
 ): Promise<ContractReadClient<TAbi>> {
   const {
     config,
@@ -159,7 +171,10 @@ export async function createContractReadClient<TAbi extends ClarityAbi>(
 
   assertValidAddress(contractAddress);
 
-  if (!contractName || !isValidContractId(`${contractAddress}.${contractName}`)) {
+  if (
+    !contractName ||
+    !isValidContractId(`${contractAddress}.${contractName}`)
+  ) {
     throw new InvalidContractError(`${contractAddress}.${contractName}`);
   }
 
@@ -176,15 +191,16 @@ export async function createContractReadClient<TAbi extends ClarityAbi>(
     : ((await (abiLoader ?? fetchContractAbi)(
         config,
         contractAddress,
-        contractName
+        contractName,
       )) as TAbi);
 
   const call = async <TName extends AbiFunctionName<TAbi>>(
     functionName: TName,
     args: ReadOnlyFunctionArgs,
-    senderAddress?: StacksAddress
+    senderAddress?: StacksAddress,
   ): Promise<ReadOnlyCallResult> => {
-    const selectedSender = senderAddress ?? defaultSenderAddress ?? contractAddress;
+    const selectedSender =
+      senderAddress ?? defaultSenderAddress ?? contractAddress;
 
     if (!selectedSender) {
       throw new InvalidAddressError(String(selectedSender));
@@ -211,14 +227,20 @@ export async function createContractReadClient<TAbi extends ClarityAbi>(
     };
   };
 
-  const readOnlyFunctions = abi.functions.filter(fn => fn.access === 'read_only');
+  const readOnlyFunctions = abi.functions.filter(
+    (fn) => fn.access === "read_only",
+  );
 
-  const methods = {} as ContractReadClient<TAbi>['methods'];
+  const methods = {} as ContractReadClient<TAbi>["methods"];
 
   for (const fn of readOnlyFunctions) {
     const functionName = fn.name as AbiFunctionName<TAbi>;
     methods[functionName] = ((args, senderAddress) =>
-      call(functionName, args, senderAddress)) as ContractReadClient<TAbi>['methods'][typeof functionName];
+      call(
+        functionName,
+        args,
+        senderAddress,
+      )) as ContractReadClient<TAbi>["methods"][typeof functionName];
   }
 
   return {

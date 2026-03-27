@@ -9,10 +9,10 @@ import {
   StacksTestnet,
   StacksDevnet,
   type StacksNetwork,
-} from '@stacks/network';
-import type { NetworkType, StacksConfig } from './types';
-import { NETWORK_URLS } from './constants';
-import { InvalidNetworkError } from './errors';
+} from "@stacks/network";
+import type { NetworkType, StacksConfig } from "./types";
+import { NETWORK_URLS } from "./constants";
+import { InvalidNetworkError } from "./errors";
 
 /**
  * Options for creating a Stacks configuration
@@ -46,11 +46,11 @@ export interface CreateStacksConfigOptions {
  * ```
  */
 export function createStacksConfig(
-  options: CreateStacksConfigOptions
+  options: CreateStacksConfigOptions,
 ): StacksConfig {
   const { network, apiUrl } = options;
 
-  if (!['mainnet', 'testnet', 'devnet'].includes(network)) {
+  if (!["mainnet", "testnet", "devnet"].includes(network)) {
     throw new InvalidNetworkError(network);
   }
 
@@ -60,13 +60,13 @@ export function createStacksConfig(
   let stacksNetwork: StacksNetwork;
 
   switch (network) {
-    case 'mainnet':
+    case "mainnet":
       stacksNetwork = new StacksMainnet({ url: finalApiUrl });
       break;
-    case 'testnet':
+    case "testnet":
       stacksNetwork = new StacksTestnet({ url: finalApiUrl });
       break;
-    case 'devnet':
+    case "devnet":
       stacksNetwork = new StacksDevnet({ url: finalApiUrl });
       break;
     default:
@@ -98,12 +98,12 @@ export function createStacksConfig(
  */
 export function getConfigFromEnv(): StacksConfig {
   const network =
-    (process.env['NEXT_PUBLIC_STACKS_NETWORK'] as NetworkType | undefined) ??
-    (process.env['STACKS_NETWORK'] as NetworkType | undefined) ??
-    'testnet';
+    (process.env["NEXT_PUBLIC_STACKS_NETWORK"] as NetworkType | undefined) ??
+    (process.env["STACKS_NETWORK"] as NetworkType | undefined) ??
+    "testnet";
 
   const apiUrl =
-    process.env['NEXT_PUBLIC_STACKS_API_URL'] ?? process.env['STACKS_API_URL'];
+    process.env["NEXT_PUBLIC_STACKS_API_URL"] ?? process.env["STACKS_API_URL"];
 
   return createStacksConfig({ network, apiUrl });
 }
@@ -112,19 +112,19 @@ export function getConfigFromEnv(): StacksConfig {
  * Checks if a network is mainnet
  */
 export function isMainnet(config: StacksConfig): boolean {
-  return config.networkType === 'mainnet';
+  return config.networkType === "mainnet";
 }
 
 /**
  * Checks if a network is testnet
  */
 export function isTestnet(config: StacksConfig): boolean {
-  return config.networkType === 'testnet';
+  return config.networkType === "testnet";
 }
 
 /**
  * Checks if a network is devnet
  */
 export function isDevnet(config: StacksConfig): boolean {
-  return config.networkType === 'devnet';
+  return config.networkType === "devnet";
 }

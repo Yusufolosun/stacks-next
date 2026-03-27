@@ -5,8 +5,8 @@
  * developer experience for building Stacks dApps with Next.js.
  */
 
-import type { StacksNetwork } from '@stacks/network';
-import type { ClarityValue } from '@stacks/transactions';
+import type { StacksNetwork } from "@stacks/network";
+import type { ClarityValue } from "@stacks/transactions";
 
 /**
  * Stacks address (principal)
@@ -31,32 +31,32 @@ export type MicroStx = bigint;
 /**
  * Network type
  */
-export type NetworkType = 'mainnet' | 'testnet' | 'devnet';
+export type NetworkType = "mainnet" | "testnet" | "devnet";
 
 /**
  * Post-condition mode
  */
-export type PostConditionMode = 'allow' | 'deny';
+export type PostConditionMode = "allow" | "deny";
 
 /**
  * Transaction status
  */
 export type TransactionStatus =
-  | 'pending'
-  | 'success'
-  | 'abort_by_response'
-  | 'abort_by_post_condition';
+  | "pending"
+  | "success"
+  | "abort_by_response"
+  | "abort_by_post_condition";
 
 /**
  * Post-condition comparison operators
  */
-export type PostConditionComparison = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
+export type PostConditionComparison = "eq" | "gt" | "gte" | "lt" | "lte";
 
 /**
  * STX post-condition
  */
 export interface StxPostCondition {
-  type: 'stx';
+  type: "stx";
   address: StacksAddress;
   condition: PostConditionComparison;
   amount: MicroStx;
@@ -66,7 +66,7 @@ export interface StxPostCondition {
  * Fungible token post-condition
  */
 export interface FungiblePostCondition {
-  type: 'fungible';
+  type: "fungible";
   address: StacksAddress;
   contractAddress: StacksAddress;
   contractName: string;
@@ -79,13 +79,13 @@ export interface FungiblePostCondition {
  * Non-fungible token post-condition
  */
 export interface NonFungiblePostCondition {
-  type: 'non-fungible';
+  type: "non-fungible";
   address: StacksAddress;
   contractAddress: StacksAddress;
   contractName: string;
   assetName: string;
   tokenId: ClarityValue;
-  condition: 'sent' | 'not-sent';
+  condition: "sent" | "not-sent";
 }
 
 /**
@@ -115,7 +115,7 @@ export interface TransactionInfo {
  */
 export interface ApiResponse<T> {
   data: T;
-  status: 'success' | 'error';
+  status: "success" | "error";
   error?: {
     code: string;
     message: string;
@@ -163,7 +163,7 @@ export interface MempoolTransaction {
   senderAddress: StacksAddress;
   txType: string;
   receiptTime: number;
-  txStatus: 'pending';
+  txStatus: "pending";
 }
 
 /**
@@ -226,7 +226,7 @@ export interface TransactionOptions {
   postConditionMode?: PostConditionMode;
   postConditions?: PostCondition[];
   sponsored?: boolean;
-  anchorMode?: 'onChainOnly' | 'offChainOnly' | 'any';
+  anchorMode?: "onChainOnly" | "offChainOnly" | "any";
 }
 
 /**

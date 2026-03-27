@@ -8,8 +8,8 @@ import {
   BNS_NAMESPACE_MAX_LENGTH,
   BNS_NAMESPACE_MIN_LENGTH,
   PATTERNS,
-} from '../constants';
-import { InvalidBnsNameError, InvalidBnsNamespaceError } from '../errors';
+} from "../constants";
+import { InvalidBnsNameError, InvalidBnsNamespaceError } from "../errors";
 
 /**
  * Normalizes a BNS label by trimming and lowercasing.
@@ -22,7 +22,7 @@ export function normalizeBnsLabel(value: string): string {
  * Validates a BNS name label.
  */
 export function isValidBnsName(name: string): boolean {
-  if (!name || typeof name !== 'string') {
+  if (!name || typeof name !== "string") {
     return false;
   }
 
@@ -42,7 +42,7 @@ export function isValidBnsName(name: string): boolean {
  * Validates a BNS namespace label.
  */
 export function isValidBnsNamespace(namespace: string): boolean {
-  if (!namespace || typeof namespace !== 'string') {
+  if (!namespace || typeof namespace !== "string") {
     return false;
   }
 
@@ -71,7 +71,7 @@ export function assertValidBnsName(name: string): asserts name is string {
  * Asserts that a BNS namespace is valid.
  */
 export function assertValidBnsNamespace(
-  namespace: string
+  namespace: string,
 ): asserts namespace is string {
   if (!isValidBnsNamespace(namespace)) {
     throw new InvalidBnsNamespaceError(namespace);
@@ -82,16 +82,16 @@ export function assertValidBnsNamespace(
  * Parses a fully-qualified BNS name (e.g., satoshi.btc).
  */
 export function parseBnsName(
-  fqn: string
+  fqn: string,
 ): { name: string; namespace: string } | null {
-  if (!fqn || typeof fqn !== 'string') {
+  if (!fqn || typeof fqn !== "string") {
     return null;
   }
 
   const normalized = normalizeBnsLabel(fqn);
-  const firstDot = normalized.indexOf('.');
+  const firstDot = normalized.indexOf(".");
 
-  if (firstDot <= 0 || firstDot !== normalized.lastIndexOf('.')) {
+  if (firstDot <= 0 || firstDot !== normalized.lastIndexOf(".")) {
     return null;
   }
 

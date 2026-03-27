@@ -12,12 +12,12 @@ import {
   makeStandardSTXPostCondition,
   type ClarityValue,
   type PostCondition as NativePostCondition,
-} from '@stacks/transactions';
+} from "@stacks/transactions";
 import {
   CONTRACT_NAME_MAX_LENGTH,
   CONTRACT_NAME_MIN_LENGTH,
-} from '../constants';
-import { InvalidAmountError, InvalidContractError } from '../errors';
+} from "../constants";
+import { InvalidAmountError, InvalidContractError } from "../errors";
 import type {
   FungiblePostCondition,
   MicroStx,
@@ -27,8 +27,8 @@ import type {
   PostConditionMode,
   StacksAddress,
   StxPostCondition,
-} from '../types';
-import { assertValidAddress } from './address';
+} from "../types";
+import { assertValidAddress } from "./address";
 
 export interface PostConditionAsset {
   contractAddress: StacksAddress;
@@ -36,7 +36,10 @@ export interface PostConditionAsset {
   assetName: string;
 }
 
-const FUNGIBLE_CODE_MAP: Record<PostConditionComparison, FungibleConditionCode> = {
+const FUNGIBLE_CODE_MAP: Record<
+  PostConditionComparison,
+  FungibleConditionCode
+> = {
   eq: FungibleConditionCode.Equal,
   gt: FungibleConditionCode.Greater,
   gte: FungibleConditionCode.GreaterEqual,
@@ -62,13 +65,13 @@ function assertAssetName(assetName: string): void {
 
 function assertMicroAmount(amount: bigint): void {
   if (amount < BigInt(0)) {
-    throw new InvalidAmountError(amount, 'Amount cannot be negative');
+    throw new InvalidAmountError(amount, "Amount cannot be negative");
   }
 }
 
 function assertFungibleAmount(amount: bigint): void {
   if (amount < BigInt(0)) {
-    throw new InvalidAmountError(amount, 'Amount cannot be negative');
+    throw new InvalidAmountError(amount, "Amount cannot be negative");
   }
 }
 
@@ -88,13 +91,13 @@ function toAssetInfo(asset: PostConditionAsset): string {
 export function createStxPostCondition(
   address: StacksAddress,
   condition: PostConditionComparison,
-  amount: MicroStx
+  amount: MicroStx,
 ): StxPostCondition {
   assertValidAddress(address);
   assertMicroAmount(amount);
 
   return {
-    type: 'stx',
+    type: "stx",
     address,
     condition,
     amount,
@@ -108,14 +111,14 @@ export function createFungiblePostCondition(
   address: StacksAddress,
   asset: PostConditionAsset,
   condition: PostConditionComparison,
-  amount: bigint
+  amount: bigint,
 ): FungiblePostCondition {
   assertValidAddress(address);
   assertAsset(asset);
   assertFungibleAmount(amount);
 
   return {
-    type: 'fungible',
+    type: "fungible",
     address,
     contractAddress: asset.contractAddress,
     contractName: asset.contractName,
@@ -132,13 +135,13 @@ export function createNonFungiblePostCondition(
   address: StacksAddress,
   asset: PostConditionAsset,
   tokenId: ClarityValue,
-  condition: 'sent' | 'not-sent'
+  condition: "sent" | "not-sent",
 ): NonFungiblePostCondition {
   assertValidAddress(address);
   assertAsset(asset);
 
   return {
-    type: 'non-fungible',
+    type: "non-fungible",
     address,
     contractAddress: asset.contractAddress,
     contractName: asset.contractName,
@@ -152,9 +155,9 @@ export function createNonFungiblePostCondition(
  * Converts package-level post-condition mode to Stacks SDK mode.
  */
 export function toNativePostConditionMode(
-  mode: PostConditionMode
+  mode: PostConditionMode,
 ): NativePostConditionMode {
-  return mode === 'allow'
+  return mode === "allow"
     ? NativePostConditionMode.Allow
     : NativePostConditionMode.Deny;
 }
@@ -163,32 +166,32 @@ export function toNativePostConditionMode(
  * Converts a package-level post-condition descriptor to Stacks SDK post-condition.
  */
 export function toNativePostCondition(
-  postCondition: PostCondition
+  postCondition: PostCondition,
 ): NativePostCondition {
-  if (postCondition.type === 'stx') {
+  if (postCondition.type === "stx") {
     return makeStandardSTXPostCondition(
       postCondition.address,
       FUNGIBLE_CODE_MAP[postCondition.condition],
-      postCondition.amount
+      postCondition.amount,
     );
   }
 
-  if (postCondition.type === 'fungible') {
+  if (postCondition.type === "fungible") {
     return makeStandardFungiblePostCondition(
       postCondition.address,
       FUNGIBLE_CODE_MAP[postCondition.condition],
       postCondition.amount,
-      toAssetInfo(postCondition)
+      toAssetInfo(postCondition),
     );
   }
 
   return makeStandardNonFungiblePostCondition(
     postCondition.address,
-    postCondition.condition === 'sent'
+    postCondition.condition === "sent"
       ? NonFungibleConditionCode.Sends
       : NonFungibleConditionCode.DoesNotSend,
     toAssetInfo(postCondition),
-    postCondition.tokenId
+    postCondition.tokenId,
   );
 }
 
@@ -196,7 +199,7 @@ export function toNativePostCondition(
  * Converts an array of package-level post-conditions to SDK post-conditions.
  */
 export function toNativePostConditions(
-  postConditions: readonly PostCondition[]
+  postConditions: readonly PostCondition[],
 ): NativePostCondition[] {
   return postConditions.map(toNativePostCondition);
 }
@@ -204,27 +207,27 @@ export function toNativePostConditions(
 class StxConditionBuilder {
   constructor(
     private readonly owner: PostConditionBuilder,
-    private readonly address: StacksAddress
+    private readonly address: StacksAddress,
   ) {}
 
   public eq(amount: MicroStx): PostConditionBuilder {
-    return this.owner.add(createStxPostCondition(this.address, 'eq', amount));
+    return this.owner.add(createStxPostCondition(this.address, "eq", amount));
   }
 
   public gt(amount: MicroStx): PostConditionBuilder {
-    return this.owner.add(createStxPostCondition(this.address, 'gt', amount));
+    return this.owner.add(createStxPostCondition(this.address, "gt", amount));
   }
 
   public gte(amount: MicroStx): PostConditionBuilder {
-    return this.owner.add(createStxPostCondition(this.address, 'gte', amount));
+    return this.owner.add(createStxPostCondition(this.address, "gte", amount));
   }
 
   public lt(amount: MicroStx): PostConditionBuilder {
-    return this.owner.add(createStxPostCondition(this.address, 'lt', amount));
+    return this.owner.add(createStxPostCondition(this.address, "lt", amount));
   }
 
   public lte(amount: MicroStx): PostConditionBuilder {
-    return this.owner.add(createStxPostCondition(this.address, 'lte', amount));
+    return this.owner.add(createStxPostCondition(this.address, "lte", amount));
   }
 }
 
@@ -232,36 +235,36 @@ class FungibleConditionBuilder {
   constructor(
     private readonly owner: PostConditionBuilder,
     private readonly address: StacksAddress,
-    private readonly asset: PostConditionAsset
+    private readonly asset: PostConditionAsset,
   ) {}
 
   public eq(amount: bigint): PostConditionBuilder {
     return this.owner.add(
-      createFungiblePostCondition(this.address, this.asset, 'eq', amount)
+      createFungiblePostCondition(this.address, this.asset, "eq", amount),
     );
   }
 
   public gt(amount: bigint): PostConditionBuilder {
     return this.owner.add(
-      createFungiblePostCondition(this.address, this.asset, 'gt', amount)
+      createFungiblePostCondition(this.address, this.asset, "gt", amount),
     );
   }
 
   public gte(amount: bigint): PostConditionBuilder {
     return this.owner.add(
-      createFungiblePostCondition(this.address, this.asset, 'gte', amount)
+      createFungiblePostCondition(this.address, this.asset, "gte", amount),
     );
   }
 
   public lt(amount: bigint): PostConditionBuilder {
     return this.owner.add(
-      createFungiblePostCondition(this.address, this.asset, 'lt', amount)
+      createFungiblePostCondition(this.address, this.asset, "lt", amount),
     );
   }
 
   public lte(amount: bigint): PostConditionBuilder {
     return this.owner.add(
-      createFungiblePostCondition(this.address, this.asset, 'lte', amount)
+      createFungiblePostCondition(this.address, this.asset, "lte", amount),
     );
   }
 }
@@ -271,12 +274,17 @@ class NonFungibleConditionBuilder {
     private readonly owner: PostConditionBuilder,
     private readonly address: StacksAddress,
     private readonly asset: PostConditionAsset,
-    private readonly tokenId: ClarityValue
+    private readonly tokenId: ClarityValue,
   ) {}
 
   public sent(): PostConditionBuilder {
     return this.owner.add(
-      createNonFungiblePostCondition(this.address, this.asset, this.tokenId, 'sent')
+      createNonFungiblePostCondition(
+        this.address,
+        this.asset,
+        this.tokenId,
+        "sent",
+      ),
     );
   }
 
@@ -286,8 +294,8 @@ class NonFungibleConditionBuilder {
         this.address,
         this.asset,
         this.tokenId,
-        'not-sent'
-      )
+        "not-sent",
+      ),
     );
   }
 }
@@ -305,7 +313,7 @@ export class PostConditionBuilder {
 
   public fungible(
     address: StacksAddress,
-    asset: PostConditionAsset
+    asset: PostConditionAsset,
   ): FungibleConditionBuilder {
     assertValidAddress(address);
     assertAsset(asset);
@@ -315,7 +323,7 @@ export class PostConditionBuilder {
   public nonFungible(
     address: StacksAddress,
     asset: PostConditionAsset,
-    tokenId: ClarityValue
+    tokenId: ClarityValue,
   ): NonFungibleConditionBuilder {
     assertValidAddress(address);
     assertAsset(asset);
@@ -327,7 +335,9 @@ export class PostConditionBuilder {
     return this;
   }
 
-  public addMany(postConditions: readonly PostCondition[]): PostConditionBuilder {
+  public addMany(
+    postConditions: readonly PostCondition[],
+  ): PostConditionBuilder {
     this.conditions.push(...postConditions);
     return this;
   }

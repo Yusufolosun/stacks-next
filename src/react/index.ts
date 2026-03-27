@@ -22,11 +22,11 @@
  * @packageDocumentation
  */
 
-// React hooks and components will be implemented in Phase 4
-// For now, export a placeholder to ensure the build works
+// React hooks and components are exposed through this entrypoint over minor releases.
+// A placeholder constant is kept for package-surface stability.
 
 /**
- * Placeholder - React integration coming in Phase 4
+ * Placeholder - React integration surface
  *
  * This module will include:
  * - StacksProvider - React context provider
@@ -40,4 +40,4 @@
  * - useSbtcBalance - sBTC balance hook
  */
 
-export const REACT_MODULE_VERSION = '0.1.0';
+export const REACT_MODULE_VERSION = "1.0.0";

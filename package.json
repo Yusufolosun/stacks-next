@@ -1,7 +1,7 @@
 {
   "name": "@yusufolosun/stacks-next",
-  "version": "0.1.0",
-  "description": "Batteries-included full-stack toolkit for building production-ready Stacks + Clarity dApps with Next.js 14+ App Router. Secure server actions, typed contract calls, SIWS auth, caching, sBTC helpers, and more.",
+  "version": "1.0.0",
+  "description": "Production-grade TypeScript utility library for building Stacks + Clarity dApps with Next.js. Includes validated address/contract helpers, precision-safe STX math, fee utilities, BNS and memo helpers, post-condition DSL, and server read/transaction tooling.",
   "author": "Yusuf Olosun",
   "license": "MIT",
   "type": "module",
@@ -69,7 +69,7 @@
     "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\" \"*.{json,md,cjs,ts}\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

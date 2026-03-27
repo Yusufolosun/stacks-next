@@ -2,11 +2,14 @@
  * Address validation and formatting utilities
  */
 
-import { validateStacksAddress } from '@stacks/transactions';
-import { CONTRACT_NAME_MAX_LENGTH, CONTRACT_NAME_MIN_LENGTH } from '../constants';
-import { PATTERNS } from '../constants';
-import { InvalidAddressError, InvalidContractError } from '../errors';
-import type { StacksAddress, NetworkType } from '../types';
+import { validateStacksAddress } from "@stacks/transactions";
+import {
+  CONTRACT_NAME_MAX_LENGTH,
+  CONTRACT_NAME_MIN_LENGTH,
+} from "../constants";
+import { PATTERNS } from "../constants";
+import { InvalidAddressError, InvalidContractError } from "../errors";
+import type { StacksAddress, NetworkType } from "../types";
 
 const CONTRACT_NAME_PATTERN = /^[a-zA-Z]([a-zA-Z0-9]|[-_])*$/;
 
@@ -23,7 +26,7 @@ const CONTRACT_NAME_PATTERN = /^[a-zA-Z]([a-zA-Z0-9]|[-_])*$/;
  * ```
  */
 export function isValidStacksAddress(address: string): boolean {
-  if (!address || typeof address !== 'string') {
+  if (!address || typeof address !== "string") {
     return false;
   }
 
@@ -43,12 +46,12 @@ export function isValidStacksAddress(address: string): boolean {
  * ```
  */
 export function isValidContractId(contractId: string): boolean {
-  if (!contractId || typeof contractId !== 'string') {
+  if (!contractId || typeof contractId !== "string") {
     return false;
   }
 
-  const firstDot = contractId.indexOf('.');
-  if (firstDot <= 0 || firstDot !== contractId.lastIndexOf('.')) {
+  const firstDot = contractId.indexOf(".");
+  if (firstDot <= 0 || firstDot !== contractId.lastIndexOf(".")) {
     return false;
   }
 
@@ -81,7 +84,7 @@ export function isValidContractId(contractId: string): boolean {
  * ```
  */
 export function isValidTxId(txId: string): boolean {
-  if (!txId || typeof txId !== 'string') {
+  if (!txId || typeof txId !== "string") {
     return false;
   }
   return PATTERNS.TX_ID.test(txId);
@@ -93,7 +96,9 @@ export function isValidTxId(txId: string): boolean {
  * @param address - The address to validate
  * @throws InvalidAddressError if the address is invalid
  */
-export function assertValidAddress(address: string): asserts address is StacksAddress {
+export function assertValidAddress(
+  address: string,
+): asserts address is StacksAddress {
   if (!isValidStacksAddress(address)) {
     throw new InvalidAddressError(address);
   }
@@ -114,7 +119,7 @@ export function assertValidAddress(address: string): asserts address is StacksAd
  */
 export function shortenAddress(address: string, chars = 5): string {
   if (!address) {
-    return '';
+    return "";
   }
 
   if (address.length <= chars * 2 + 3) {
@@ -133,12 +138,12 @@ export function shortenAddress(address: string, chars = 5): string {
  */
 export function formatAddress(
   address: string,
-  options: { shorten?: boolean; chars?: number } = {}
+  options: { shorten?: boolean; chars?: number } = {},
 ): string {
   const { shorten = false, chars = 5 } = options;
 
   if (!address) {
-    return '';
+    return "";
   }
 
   if (shorten) {
@@ -160,8 +165,10 @@ export function formatAddress(
  * getNetworkFromAddress('ST2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKQYJ8Y87'); // 'testnet'
  * ```
  */
-export function getNetworkFromAddress(address: string): NetworkType | undefined {
-  if (!address || typeof address !== 'string' || address.length < 2) {
+export function getNetworkFromAddress(
+  address: string,
+): NetworkType | undefined {
+  if (!address || typeof address !== "string" || address.length < 2) {
     return undefined;
   }
 
@@ -172,12 +179,12 @@ export function getNetworkFromAddress(address: string): NetworkType | undefined 
   const prefix = address.slice(0, 2);
 
   switch (prefix) {
-    case 'SP':
-    case 'SM':
-      return 'mainnet';
-    case 'ST':
-    case 'SN':
-      return 'testnet';
+    case "SP":
+    case "SM":
+      return "mainnet";
+    case "ST":
+    case "SN":
+      return "testnet";
     default:
       return undefined;
   }
@@ -192,7 +199,7 @@ export function getNetworkFromAddress(address: string): NetworkType | undefined 
  */
 export function isAddressForNetwork(
   address: string,
-  network: NetworkType
+  network: NetworkType,
 ): boolean {
   const addressNetwork = getNetworkFromAddress(address);
 
@@ -200,8 +207,8 @@ export function isAddressForNetwork(
     return false;
   }
 
-  if (network === 'devnet') {
-    return addressNetwork === 'testnet';
+  if (network === "devnet") {
+    return addressNetwork === "testnet";
   }
 
   return addressNetwork === network;
@@ -214,13 +221,13 @@ export function isAddressForNetwork(
  * @returns Object with address and contractName, or null if invalid
  */
 export function parseContractId(
-  contractId: string
+  contractId: string,
 ): { address: StacksAddress; contractName: string } | null {
   if (!isValidContractId(contractId)) {
     return null;
   }
 
-  const [address, contractName] = contractId.split('.');
+  const [address, contractName] = contractId.split(".");
 
   if (!address || !contractName) {
     return null;
@@ -238,7 +245,7 @@ export function parseContractId(
  */
 export function createContractId(
   address: StacksAddress,
-  contractName: string
+  contractName: string,
 ): string {
   if (!isValidStacksAddress(address)) {
     throw new InvalidAddressError(address);

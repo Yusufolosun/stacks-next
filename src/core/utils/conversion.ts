@@ -2,9 +2,9 @@
  * STX and microSTX conversion utilities
  */
 
-import { MICRO_STX_PER_STX, STX_TOKEN } from '../constants';
-import { InvalidAmountError } from '../errors';
-import type { MicroStx } from '../types';
+import { MICRO_STX_PER_STX, STX_TOKEN } from "../constants";
+import { InvalidAmountError } from "../errors";
+import type { MicroStx } from "../types";
 
 const MAX_DECIMALS = 6;
 const DECIMAL_PATTERN = /^\d+(?:\.\d+)?$/;
@@ -15,11 +15,11 @@ function normalizeNumberInput(value: number): string {
   }
 
   if (value < 0) {
-    throw new InvalidAmountError(value, 'Amount cannot be negative');
+    throw new InvalidAmountError(value, "Amount cannot be negative");
   }
 
   // Convert scientific notation into a stable decimal representation.
-  return value.toLocaleString('en-US', {
+  return value.toLocaleString("en-US", {
     useGrouping: false,
     maximumFractionDigits: 20,
   });
@@ -32,7 +32,7 @@ function parseDecimalToMicroStx(rawValue: string): MicroStx {
     throw new InvalidAmountError(rawValue);
   }
 
-  const [wholePart, fractionPart = ''] = value.split('.');
+  const [wholePart, fractionPart = ""] = value.split(".");
   if (!wholePart) {
     throw new InvalidAmountError(rawValue);
   }
@@ -41,11 +41,14 @@ function parseDecimalToMicroStx(rawValue: string): MicroStx {
     fractionPart.length > MAX_DECIMALS &&
     /[1-9]/.test(fractionPart.slice(MAX_DECIMALS))
   ) {
-    throw new InvalidAmountError(rawValue, 'Amount supports up to 6 decimal places');
+    throw new InvalidAmountError(
+      rawValue,
+      "Amount supports up to 6 decimal places",
+    );
   }
 
   const truncatedFraction = fractionPart.slice(0, MAX_DECIMALS);
-  const paddedFraction = truncatedFraction.padEnd(MAX_DECIMALS, '0');
+  const paddedFraction = truncatedFraction.padEnd(MAX_DECIMALS, "0");
 
   return BigInt(wholePart) * MICRO_STX_PER_STX + BigInt(paddedFraction);
 }
@@ -64,15 +67,15 @@ function parseDecimalToMicroStx(rawValue: string): MicroStx {
  * ```
  */
 export function stxToMicroStx(stx: number | string | bigint): MicroStx {
-  if (typeof stx === 'bigint') {
+  if (typeof stx === "bigint") {
     if (stx < BigInt(0)) {
-      throw new InvalidAmountError(stx, 'Amount cannot be negative');
+      throw new InvalidAmountError(stx, "Amount cannot be negative");
     }
 
     return stx * MICRO_STX_PER_STX;
   }
 
-  if (typeof stx === 'number') {
+  if (typeof stx === "number") {
     return parseDecimalToMicroStx(normalizeNumberInput(stx));
   }
 
@@ -103,13 +106,13 @@ export function stxToMicroStx(stx: number | string | bigint): MicroStx {
  */
 export function microStxToStx(microStx: MicroStx | number | string): number {
   const microStxBigInt =
-    typeof microStx === 'bigint' ? microStx : BigInt(microStx);
+    typeof microStx === "bigint" ? microStx : BigInt(microStx);
 
   const maxSafe = BigInt(Number.MAX_SAFE_INTEGER) * MICRO_STX_PER_STX;
   if (microStxBigInt > maxSafe || microStxBigInt < -maxSafe) {
     throw new InvalidAmountError(
       microStxBigInt,
-      'Amount is too large to safely convert to a JavaScript number'
+      "Amount is too large to safely convert to a JavaScript number",
     );
   }
 
@@ -136,9 +139,13 @@ export function formatStx(
     decimals?: number;
     symbol?: boolean;
     locale?: string;
-  } = {}
+  } = {},
 ): string {
-  const { decimals = STX_TOKEN.decimals, symbol = true, locale = 'en-US' } = options;
+  const {
+    decimals = STX_TOKEN.decimals,
+    symbol = true,
+    locale = "en-US",
+  } = options;
 
   const stx = microStxToStx(microStx);
 
@@ -168,14 +175,14 @@ export function formatStxCompact(
   options: {
     symbol?: boolean;
     locale?: string;
-  } = {}
+  } = {},
 ): string {
-  const { symbol = true, locale = 'en-US' } = options;
+  const { symbol = true, locale = "en-US" } = options;
 
   const stx = microStxToStx(microStx);
 
   const formatted = stx.toLocaleString(locale, {
-    notation: 'compact',
+    notation: "compact",
     maximumFractionDigits: 2,
   });
 
@@ -196,15 +203,15 @@ export function formatStxCompact(
  * ```
  */
 export function parseStx(value: string): MicroStx {
-  if (!value || typeof value !== 'string') {
+  if (!value || typeof value !== "string") {
     throw new InvalidAmountError(value);
   }
 
   // Remove STX suffix and whitespace
-  const cleaned = value.replace(/\s*STX\s*/i, '').trim();
+  const cleaned = value.replace(/\s*STX\s*/i, "").trim();
 
   // Remove thousand separators
-  const normalized = cleaned.replace(/,/g, '');
+  const normalized = cleaned.replace(/,/g, "");
 
   return stxToMicroStx(normalized);
 }
@@ -218,10 +225,10 @@ export function parseStx(value: string): MicroStx {
  */
 export function compareMicroStx(
   a: MicroStx | number | string,
-  b: MicroStx | number | string
+  b: MicroStx | number | string,
 ): -1 | 0 | 1 {
-  const aBigInt = typeof a === 'bigint' ? a : BigInt(a);
-  const bBigInt = typeof b === 'bigint' ? b : BigInt(b);
+  const aBigInt = typeof a === "bigint" ? a : BigInt(a);
+  const bBigInt = typeof b === "bigint" ? b : BigInt(b);
 
   if (aBigInt < bBigInt) return -1;
   if (aBigInt > bBigInt) return 1;
@@ -238,7 +245,7 @@ export function addMicroStx(
   ...amounts: (MicroStx | number | string)[]
 ): MicroStx {
   return amounts.reduce<MicroStx>((total, amount) => {
-    const amountBigInt = typeof amount === 'bigint' ? amount : BigInt(amount);
+    const amountBigInt = typeof amount === "bigint" ? amount : BigInt(amount);
     return total + amountBigInt;
   }, BigInt(0));
 }
@@ -254,7 +261,7 @@ export function subtractMicroStx(
   from: MicroStx | number | string,
   ...amounts: (MicroStx | number | string)[]
 ): MicroStx {
-  const fromBigInt = typeof from === 'bigint' ? from : BigInt(from);
+  const fromBigInt = typeof from === "bigint" ? from : BigInt(from);
   const total = addMicroStx(...amounts);
   return fromBigInt - total;
 }
@@ -266,7 +273,7 @@ export function subtractMicroStx(
  * @returns true if the amount is zero
  */
 export function isZeroMicroStx(amount: MicroStx | number | string): boolean {
-  const amountBigInt = typeof amount === 'bigint' ? amount : BigInt(amount);
+  const amountBigInt = typeof amount === "bigint" ? amount : BigInt(amount);
   return amountBigInt === BigInt(0);
 }
 
@@ -284,7 +291,7 @@ export function maxMicroStx(
   }
 
   return amounts.reduce<MicroStx>((max, amount) => {
-    const amountBigInt = typeof amount === 'bigint' ? amount : BigInt(amount);
+    const amountBigInt = typeof amount === "bigint" ? amount : BigInt(amount);
     return amountBigInt > max ? amountBigInt : max;
   }, BigInt(0));
 }
@@ -303,10 +310,10 @@ export function minMicroStx(
   }
 
   const first = amounts[0];
-  const firstBigInt = typeof first === 'bigint' ? first : BigInt(first ?? 0);
+  const firstBigInt = typeof first === "bigint" ? first : BigInt(first ?? 0);
 
   return amounts.reduce<MicroStx>((min, amount) => {
-    const amountBigInt = typeof amount === 'bigint' ? amount : BigInt(amount);
+    const amountBigInt = typeof amount === "bigint" ? amount : BigInt(amount);
     return amountBigInt < min ? amountBigInt : min;
   }, firstBigInt);
 }

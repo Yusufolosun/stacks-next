@@ -10,12 +10,12 @@ import {
   type ClarityAbi,
   type ClarityValue,
   type StacksTransaction,
-} from '@stacks/transactions';
+} from "@stacks/transactions";
 import {
   BroadcastFailedError,
   InvalidMemoError,
   StacksNextError,
-} from '../core/errors';
+} from "../core/errors";
 import type {
   BroadcastResult,
   MicroStx,
@@ -23,13 +23,13 @@ import type {
   PostConditionMode,
   StacksAddress,
   StacksConfig,
-} from '../core/types';
-import { assertValidAddress } from '../core/utils/address';
-import { isValidMemo } from '../core/utils/memo';
+} from "../core/types";
+import { assertValidAddress } from "../core/utils/address";
+import { isValidMemo } from "../core/utils/memo";
 import {
   toNativePostConditionMode,
   toNativePostConditions,
-} from '../core/utils/postConditions';
+} from "../core/utils/postConditions";
 
 export interface BuildUnsignedStxTransferOptions {
   config: StacksConfig;
@@ -86,7 +86,7 @@ export type ServerActionResult<TData> =
  */
 export async function buildUnsignedStxTransfer(
   options: BuildUnsignedStxTransferOptions,
-  txFactory: typeof makeUnsignedSTXTokenTransfer = makeUnsignedSTXTokenTransfer
+  txFactory: typeof makeUnsignedSTXTokenTransfer = makeUnsignedSTXTokenTransfer,
 ): Promise<StacksTransaction> {
   const {
     config,
@@ -97,13 +97,13 @@ export async function buildUnsignedStxTransfer(
     fee,
     nonce,
     sponsored,
-    anchorMode = 'any',
+    anchorMode = "any",
   } = options;
 
   assertValidAddress(recipient);
 
   if (memo && !isValidMemo(memo)) {
-    throw new InvalidMemoError(memo, 'Memo exceeds maximum byte length');
+    throw new InvalidMemoError(memo, "Memo exceeds maximum byte length");
   }
 
   const txOptions: Parameters<typeof makeUnsignedSTXTokenTransfer>[0] = {
@@ -138,7 +138,7 @@ export async function buildUnsignedStxTransfer(
  */
 export async function buildUnsignedContractCall(
   options: BuildUnsignedContractCallOptions,
-  txFactory: typeof makeUnsignedContractCall = makeUnsignedContractCall
+  txFactory: typeof makeUnsignedContractCall = makeUnsignedContractCall,
 ): Promise<StacksTransaction> {
   const {
     config,
@@ -150,8 +150,8 @@ export async function buildUnsignedContractCall(
     fee,
     nonce,
     sponsored,
-    anchorMode = 'any',
-    postConditionMode = 'deny',
+    anchorMode = "any",
+    postConditionMode = "deny",
     postConditions = [],
     validateWithAbi,
   } = options;
@@ -196,11 +196,11 @@ export async function broadcastSignedTransaction(
   config: StacksConfig,
   transaction: StacksTransaction,
   attachment?: Uint8Array,
-  broadcaster: typeof broadcastTransaction = broadcastTransaction
+  broadcaster: typeof broadcastTransaction = broadcastTransaction,
 ): Promise<BroadcastResult> {
   const result = await broadcaster(transaction, config.network, attachment);
 
-  if ('error' in result && result.error) {
+  if ("error" in result && result.error) {
     return {
       txId: result.txid,
       success: false,
@@ -221,17 +221,19 @@ export async function broadcastSignedTransactionOrThrow(
   config: StacksConfig,
   transaction: StacksTransaction,
   attachment?: Uint8Array,
-  broadcaster: typeof broadcastTransaction = broadcastTransaction
+  broadcaster: typeof broadcastTransaction = broadcastTransaction,
 ): Promise<string> {
   const result = await broadcastSignedTransaction(
     config,
     transaction,
     attachment,
-    broadcaster
+    broadcaster,
   );
 
   if (!result.success) {
-    throw new BroadcastFailedError(result.error ?? 'Transaction broadcast failed');
+    throw new BroadcastFailedError(
+      result.error ?? "Transaction broadcast failed",
+    );
   }
 
   return result.txId;
@@ -242,7 +244,7 @@ export async function broadcastSignedTransactionOrThrow(
  */
 export function createServerAction<TInput, TOutput>(
   handler: (input: TInput) => Promise<TOutput> | TOutput,
-  options: CreateServerActionOptions = {}
+  options: CreateServerActionOptions = {},
 ): (input: TInput) => Promise<ServerActionResult<TOutput>> {
   const { exposeStack = false } = options;
 
@@ -255,7 +257,7 @@ export function createServerAction<TInput, TOutput>(
       };
     } catch (error) {
       if (error instanceof StacksNextError) {
-        const details: ServerActionFailure['error'] = {
+        const details: ServerActionFailure["error"] = {
           message: error.message,
           code: error.code,
         };
@@ -271,9 +273,11 @@ export function createServerAction<TInput, TOutput>(
       }
 
       const message =
-        error instanceof Error ? error.message : 'Unexpected server action error';
+        error instanceof Error
+          ? error.message
+          : "Unexpected server action error";
 
-      const details: ServerActionFailure['error'] = {
+      const details: ServerActionFailure["error"] = {
         message,
       };
 

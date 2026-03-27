@@ -4,7 +4,7 @@
  * This file is executed before each test file.
  */
 
-import { afterEach } from 'vitest';
+import { afterEach } from "vitest";
 
 // Clean up after each test
 afterEach(() => {

@@ -7,12 +7,12 @@ import {
   MIN_TX_FEE,
   MAX_TX_FEE,
   DEFAULT_API_TIMEOUT,
-} from '../constants';
-import { InvalidFeeError, ApiError } from '../errors';
-import type { MicroStx, FeeEstimate, StacksConfig } from '../types';
+} from "../constants";
+import { InvalidFeeError, ApiError } from "../errors";
+import type { MicroStx, FeeEstimate, StacksConfig } from "../types";
 
 function toFiniteNumber(value: unknown): number | null {
-  const parsed = typeof value === 'number' ? value : Number(value);
+  const parsed = typeof value === "number" ? value : Number(value);
 
   if (Number.isNaN(parsed) || !Number.isFinite(parsed)) {
     return null;
@@ -80,7 +80,7 @@ export function validateFee(
   options: {
     minFee?: MicroStx;
     maxFee?: MicroStx;
-  } = {}
+  } = {},
 ): void {
   const { minFee = MIN_TX_FEE, maxFee = MAX_TX_FEE } = options;
 
@@ -129,9 +129,13 @@ export function getDefaultFee(): MicroStx {
  */
 export async function estimateFee(
   config: StacksConfig,
-  options: EstimateFeeOptions = {}
+  options: EstimateFeeOptions = {},
 ): Promise<FeeEstimate> {
-  const { txPayload, estimatedSize = 300, timeout = DEFAULT_API_TIMEOUT } = options;
+  const {
+    txPayload,
+    estimatedSize = 300,
+    timeout = DEFAULT_API_TIMEOUT,
+  } = options;
   const safeEstimatedSize = toEstimatedSize(estimatedSize);
 
   const controller = new AbortController();
@@ -140,37 +144,35 @@ export async function estimateFee(
   try {
     // If we have a transaction payload, use POST to get exact fee estimation
     if (txPayload) {
-      const response = await fetch(
-        `${config.apiUrl}/v2/fees/transaction`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            transaction_payload: txPayload,
-          }),
-          signal: controller.signal,
-        }
-      );
+      const response = await fetch(`${config.apiUrl}/v2/fees/transaction`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          transaction_payload: txPayload,
+        }),
+        signal: controller.signal,
+      });
 
       if (!response.ok) {
         throw new ApiError(
           `Fee estimation failed: ${response.statusText}`,
           response.status,
-          `${config.apiUrl}/v2/fees/transaction`
+          `${config.apiUrl}/v2/fees/transaction`,
         );
       }
 
       const data: unknown = await response.json();
 
       if (
-        typeof data === 'object' &&
+        typeof data === "object" &&
         data !== null &&
-        'estimations' in data &&
+        "estimations" in data &&
         Array.isArray((data as { estimations: unknown[] }).estimations)
       ) {
-        const estimations = (data as { estimations: Array<{ fee?: unknown }> }).estimations;
+        const estimations = (data as { estimations: Array<{ fee?: unknown }> })
+          .estimations;
 
         return {
           low: toFeeAmount(estimations[0]?.fee, MIN_TX_FEE),
@@ -181,18 +183,15 @@ export async function estimateFee(
     }
 
     // Fallback to transfer fee estimation
-    const response = await fetch(
-      `${config.apiUrl}/v2/fees/transfer`,
-      {
-        signal: controller.signal,
-      }
-    );
+    const response = await fetch(`${config.apiUrl}/v2/fees/transfer`, {
+      signal: controller.signal,
+    });
 
     if (!response.ok) {
       throw new ApiError(
         `Fee estimation failed: ${response.statusText}`,
         response.status,
-        `${config.apiUrl}/v2/fees/transfer`
+        `${config.apiUrl}/v2/fees/transfer`,
       );
     }
 
@@ -251,7 +250,7 @@ export function getDefaultFeeEstimate(): FeeEstimate {
  */
 export function selectFee(
   estimate: FeeEstimate,
-  priority: 'low' | 'medium' | 'high' = 'medium'
+  priority: "low" | "medium" | "high" = "medium",
 ): MicroStx {
   return estimate[priority];
 }
@@ -270,7 +269,7 @@ export function selectFee(
  */
 export function multiplyFee(fee: MicroStx, factor: number): MicroStx {
   if (factor <= 0) {
-    throw new InvalidFeeError(fee, 'Fee factor must be positive');
+    throw new InvalidFeeError(fee, "Fee factor must be positive");
   }
 
   const result = BigInt(Math.ceil(Number(fee) * factor));
@@ -292,7 +291,7 @@ export function multiplyFee(fee: MicroStx, factor: number): MicroStx {
  */
 export function calculateReplacementFee(
   currentFee: MicroStx,
-  minIncrease = 0.25
+  minIncrease = 0.25,
 ): MicroStx {
   return multiplyFee(currentFee, 1 + minIncrease);
 }
